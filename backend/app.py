@@ -1,7 +1,9 @@
+from typing import Optional
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, String, Boolean
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from datetime import date
 import os
 
 DB_USER = os.environ["DB_USER"]
@@ -30,7 +32,21 @@ class User(db.Model):
   username: Mapped[str] 
   email:Mapped[str]
   password:Mapped[str]
-  medications:Mapped[list["Medications"]] = relationship(backref="user")
+  medications:Mapped[list["Medication"]] = relationship(backref="user")
+
+#Medication model
+class Medication (db.Model):
+    id: Mapped[int]
+    name: Mapped[str]
+    dosage: Mapped[str]
+    frequency: Mapped[str]
+    start_date: Mapped[date]
+    end_date: Mapped[Optional[date]] = mapped_column(nullable=True)
+    is_active: Mapped[bool] = mapped_column(default=True)
+    notes:Mapped[Optional[str]] = mapped_column(nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    
+
 
 
 
