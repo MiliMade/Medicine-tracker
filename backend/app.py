@@ -3,7 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from datetime import date
+from datetime import date, datetime
 import os
 
 DB_USER = os.environ["DB_USER"]
@@ -40,6 +40,7 @@ class Medication (db.Model):
     name: Mapped[str]
     dosage: Mapped[str]
     frequency: Mapped[str]
+    created_at: Mapped[date] = mapped_column(nullable=False, default=datetime.timezone.utc)
     start_date: Mapped[date]
     end_date: Mapped[Optional[date]] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True)
