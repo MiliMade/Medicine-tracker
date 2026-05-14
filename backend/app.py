@@ -2,7 +2,7 @@ from typing import Optional
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from datetime import date
 import os
 
@@ -45,7 +45,7 @@ class Medication (db.Model):
     is_active: Mapped[bool] = mapped_column(default=True)
     notes:Mapped[Optional[str]] = mapped_column(nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    
+
 
 
 
