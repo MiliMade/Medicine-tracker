@@ -3,7 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 import os
 
 DB_USER = os.environ["DB_USER"]
@@ -20,7 +20,7 @@ db = SQLAlchemy(model_class=Base)
 
 
 #configure postgres database
-app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{DB_USER}:{DB_PASSWORD}@localhost/medicine-tracker"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{DB_USER}:{DB_PASSWORD}@localhost:5433/medicine-tracker"
 
 #initialize app with extension
 db.init_app(app)
@@ -36,11 +36,11 @@ class User(db.Model):
 
 #Medication model
 class Medication (db.Model):
-    id: Mapped[int]
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     dosage: Mapped[str]
     frequency: Mapped[str]
-    created_at: Mapped[date] = mapped_column(nullable=False, default=datetime.timezone.utc)
+    created_at: Mapped[date] = mapped_column(nullable=False, default=lambda: datetime.now(timezone.utc))
     start_date: Mapped[date]
     end_date: Mapped[Optional[date]] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True)
